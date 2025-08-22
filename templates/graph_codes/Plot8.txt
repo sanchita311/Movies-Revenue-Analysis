@@ -1,0 +1,11 @@
+Violin Plot: Distribution of Foreign % across Original_Language (Top 5 languages)
+     #Plot 8
+    top_5_languages = df['Original_Language'].value_counts().nlargest(5).index
+    df_filtered_languages = df[df['Original_Language'].isin(top_5_languages)].dropna(subset=['Foreign %'])
+    plt.figure(figsize=(12, 7))
+    sns.violinplot(x='Original_Language', y='Foreign %', data=df_filtered_languages, palette='pastel')
+    plt.title('Distribution of Foreign % by Top 5 Original Languages')
+    plt.xlabel('Original Language')
+    plt.ylabel('Foreign %')
+    plt.tight_layout()
+    plt.show()

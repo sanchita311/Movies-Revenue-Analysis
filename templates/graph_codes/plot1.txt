@@ -1,0 +1,9 @@
+# Scatterplot: Rating vs Worldwide Revenue plot 1
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=df, x='Rating', y='Worldwide', hue='Year', palette='viridis', alpha=0.7)
+plt.title('Rating vs Worldwide Revenue')
+plt.xlabel('Rating')
+plt.ylabel('Worldwide Revenue (USD)')
+plt.legend(title='Year', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()

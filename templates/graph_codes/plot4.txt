@@ -1,0 +1,19 @@
+#Plot 4
+df['Genres'] = df['Genres'].fillna('Unknown')
+genre_revenue = df.groupby('Genres')['Worldwide'].sum().sort_values(ascending=False).head(10)
+
+plt.figure(figsize=(12, 6))
+# Assign hue as the genre index to apply the palette
+sns.barplot(
+    x=genre_revenue.values, 
+    y=genre_revenue.index, 
+    hue=genre_revenue.index, 
+    dodge=False, 
+    palette='cool', 
+    legend=False  # Turn off legend if not needed
+)
+plt.title('Top 10 Genres by Worldwide Revenue')
+plt.xlabel('Total Worldwide Revenue')
+plt.ylabel('Genres')
+plt.tight_layout()
+plt.show()

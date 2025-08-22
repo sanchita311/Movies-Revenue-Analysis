@@ -1,0 +1,14 @@
+Area Plot: Cumulative $Worldwide revenue over Year
+    # Ensure data is sorted by year for proper cumulative sum
+     #Plot 12
+    df_sorted_by_year = df.sort_values('Year')
+    cumulative_worldwide_revenue = df_sorted_by_year.groupby('Year')['$Worldwide'].sum().cumsum().reset_index()
+    plt.figure(figsize=(12, 7))
+    plt.fill_between(cumulative_worldwide_revenue['Year'], cumulative_worldwide_revenue['$Worldwide'], color='skyblue', alpha=0.4)
+    plt.plot(cumulative_worldwide_revenue['Year'], cumulative_worldwide_revenue['$Worldwide'], color='Slateblue', alpha=0.6)
+    plt.title('Cumulative Worldwide Revenue Over Years')
+    plt.xlabel('Year')
+    plt.ylabel('Cumulative Worldwide Revenue ($)')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()

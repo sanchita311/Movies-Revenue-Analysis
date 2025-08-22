@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies Revenue Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function toggleCode(id) {
+            const block = document.getElementById(id);
+            block.style.display = block.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-800 p-8">
+<div class="max-w-7xl mx-auto">
+
+    <h1 class="text-4xl font-bold mb-8 text-blue-800">🎯 Movies Revenue Analysis</h1>
+
+    <!-- Dataset Columns -->
+    <section class="mb-10 bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-2">📋 Dataset Columns</h2>
+        <ul class="list-disc list-inside grid grid-cols-2 gap-x-6">
+            {% for col in columns %}
+                <li>{{ col }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Single Column Stats -->
+    <section class="mb-10 bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">📊 Single Column Statistics</h2>
+        <form method="post" action="/get_stats" class="flex flex-wrap gap-4 items-center mb-4">
+            <select name="selected_column" class="p-2 rounded border">
+                {% for col in columns %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded">View Stats</button>
+        </form>
+        {% if stats_result %}
+            <div>
+                <h3 class="font-semibold">Stats for: {{ stats_result.column }}</h3>
+                <ul class="list-disc list-inside">
+                    {% for key, value in stats_result.stats.items() %}
+                        <li>{{ key }}: {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- Compare Columns -->
+    <section class="mb-10 bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">📊 Compare Two Columns</h2>
+        <form method="post" action="/compare_columns" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-4">
+            <select name="column1" class="p-2 rounded border">
+                {% for col in columns %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
+            </select>
+            <select name="column2" class="p-2 rounded border">
+                {% for col in columns %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded">Compare</button>
+        </form>
+        {% if comparison_result %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold">{{ comparison_result.col1 }}</h4>
+                    <ul class="list-disc list-inside">
+                        {% for key, value in comparison_result.data.items() %}
+                            <li>{{ key }}: {{ value[0] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold">{{ comparison_result.col2 }}</h4>
+                    <ul class="list-disc list-inside">
+                        {% for key, value in comparison_result.data.items() %}
+                            <li>{{ key }}: {{ value[1] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- Compare Top-N -->
+    <section class="mb-10 bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">🔄 Compare Top-N of Two Categories</h2>
+        <form id="compare-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <select name="cat1" class="p-2 rounded border">
+                {% for col in columns %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
+            </select>
+            <select name="cat2" class="p-2 rounded border">
+                {% for col in columns %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
+            </select>
+            <select name="numeric_col" class="p-2 rounded border">
+                {% for col in columns %}
+                    <option value="{{ col }}">{{ col }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="top_n" value="5" class="p-2 rounded border">
+            <div class="col-span-full">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Compare</button>
+            </div>
+        </form>
+        <div id="compare-output" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm"></div>
+    </section>
+
+    <!-- Year Stats -->
+    <section class="mb-10 bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">📅 Stats for Selected Year</h2>
+        <form id="year-form" class="flex gap-4 items-center mb-4">
+            <input type="number" name="year" class="p-2 rounded border" required>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded">Get Stats</button>
+        </form>
+        <div id="year-output" class="text-sm mt-2"></div>
+    </section>
+
+    <!-- Plot Sections -->
+    <h2 class="text-3xl font-bold my-10 text-blue-800">📊 Visual Analysis</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for i in range(1, 14) %}
+        <section class="bg-white p-6 rounded shadow">
+            <h2 class="text-xl font-semibold mb-4">📊 Plot {{ i }}</h2>
+            <img src="/static/plot{{ i }}.png" alt="Plot {{ i }}" class="w-full rounded mb-2 shadow">
+            <button onclick="toggleCode('code{{ i }}')" class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                Show/Hide Code
+            </button>
+            <div id="code{{ i }}" class="code-block mt-3 p-3 bg-gray-100 rounded text-sm font-mono hidden border border-gray-300 whitespace-pre-wrap">
+                {% include 'graph_codes/plot' ~ i ~ '.txt' %}
+            </div>
+        </section>
+        {% endfor %}
+    </div>
+
+     <!-- Flowchart and Preprocessing -->
+    <section class="mt-16 mb-10 bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">📌 Project Flowchart and Preprocessing</h2>
+        <div class="flex justify-center items-center gap-6">
+            <img src="/static/flowchart.png" alt="Flowchart" class="w-1/3 rounded shadow">
+            <img src="/static/preprocessing.png" alt="Preprocessing" class="w-1/3 rounded shadow">
+        </div>
+    </section>
+
+</div>
+
+<!-- Scripts -->
+<script>
+document.getElementById("compare-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const res = await fetch("/compare_categories", { method: "POST", body: form });
+    const data = await res.json();
+    let html = "";
+    for (const [key, value] of Object.entries(data)) {
+        html += `<div><h4 class="font-semibold mb-2">${key}</h4><ul class="list-disc list-inside">`;
+        for (const [k, v] of Object.entries(value)) {
+            html += `<li>${k}: ${v}</li>`;
+        }
+        html += "</ul></div>";
+    }
+    document.getElementById("compare-output").innerHTML = html;
+});
+
+document.getElementById("year-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const res = await fetch("/year_stats", { method: "POST", body: form });
+    const data = await res.json();
+    let html = "<ul class='list-disc list-inside'>";
+    for (const [key, value] of Object.entries(data)) {
+        html += `<li><strong>${key.replace('_', ' ')}:</strong> ${value}</li>`;
+    }
+    html += "</ul>";
+    document.getElementById("year-output").innerHTML = html;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Area chart: Domestic and Foreign revenues over the years plot 2
+yearly_revenue = df.groupby('Year')[['Domestic', 'Foreign']].sum()
+
+plt.figure(figsize=(12, 6))
+plt.stackplot(yearly_revenue.index, 
+              yearly_revenue['Domestic'], 
+              yearly_revenue['Foreign'], 
+              labels=['Domestic', 'Foreign'], 
+              alpha=0.8)
+plt.title("Total Domestic & Foreign Revenue by Year")
+plt.xlabel("Year")
+plt.ylabel("Revenue (USD)")
+plt.legend(loc='upper left')
+plt.tight_layout()
+plt.show()

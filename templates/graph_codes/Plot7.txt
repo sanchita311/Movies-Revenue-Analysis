@@ -1,0 +1,10 @@
+ #  Box Plot: Distribution of Domestic % across Year
+     #Plot 7
+    plt.figure(figsize=(14, 7))
+    sns.boxplot(x='Year', y='Domestic %', data=df, palette='light:blue')
+    plt.title('Distribution of Domestic % by Year')
+    plt.xlabel('Year')
+    plt.ylabel('Domestic %')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()

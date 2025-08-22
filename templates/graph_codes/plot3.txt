@@ -1,0 +1,14 @@
+# Preprocess: Take only the first genre if multiple are listed plot 5
+df['Main_Genre'] = df['Genres'].apply(lambda x: x.split(',')[0] if isinstance(x, str) else 'Unknown')
+
+# Create a pivot table: average Rating for each Genre-Year combo
+heatmap_data = df.pivot_table(index='Main_Genre', columns='Year', values='Rating', aggfunc='mean')
+
+# Plot heatmap
+plt.figure(figsize=(14, 8))
+sns.heatmap(heatmap_data, cmap='YlGnBu', linewidths=0.5, linecolor='gray')
+plt.title('Average Movie Ratings by Genre and Year')
+plt.xlabel('Year')
+plt.ylabel('Main Genre')
+plt.tight_layout()
+plt.show()

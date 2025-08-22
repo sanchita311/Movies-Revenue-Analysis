@@ -1,0 +1,9 @@
+ Pie Chart: Distribution of Original_Language (Top 5)
+     #Plot 9
+    language_counts = df['Original_Language'].value_counts().nlargest(5)
+    plt.figure(figsize=(9, 9))
+    plt.pie(language_counts, labels=language_counts.index, autopct='%1.1f%%', startangle=140, colors=sns.color_palette('bright'))
+    plt.title('Distribution of Top 5 Original Languages')
+    plt.axis('equal') # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.tight_layout()
+    plt.show()

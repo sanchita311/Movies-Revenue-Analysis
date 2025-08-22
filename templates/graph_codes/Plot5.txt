@@ -1,0 +1,9 @@
+ #  Scatter Plot: Relationship between $Worldwide and $Domestic revenue
+     #Plot 5
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x='$Worldwide', y='$Domestic', data=df, alpha=0.6, color='coral')
+    plt.title('Worldwide vs. Domestic Revenue')
+    plt.xlabel('Worldwide Revenue ($)')
+    plt.ylabel('Domestic Revenue ($)')
+    plt.tight_layout()
+    plt.show()

@@ -1,0 +1,12 @@
+Line Plot: $Worldwide revenue over Year
+    # Aggregate worldwide revenue by year
+     #Plot 10
+    yearly_worldwide_revenue = df.groupby('Year')['$Worldwide'].sum().reset_index()
+    plt.figure(figsize=(12, 7))
+    sns.lineplot(x='Year', y='$Worldwide', data=yearly_worldwide_revenue, marker='o', color='green')
+    plt.title('Total Worldwide Revenue Over Years')
+    plt.xlabel('Year')
+    plt.ylabel('Total Worldwide Revenue ($)')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()

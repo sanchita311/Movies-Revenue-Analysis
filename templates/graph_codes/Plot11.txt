@@ -1,0 +1,9 @@
+Heatmap: Correlation matrix of numerical columns
+     #Plot 11
+    numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
+    correlation_matrix = df[numerical_cols].corr()
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=.5)
+    plt.title('Correlation Matrix of Numerical Columns')
+    plt.tight_layout()
+    plt.show()

@@ -1,0 +1,16 @@
+Hexbin Plot: $Domestic vs $Foreign revenue
+    # Drop rows with NaN or zero values for this plot if they distort the view
+     #Plot 13
+    df_hexbin = df.dropna(subset=['$Domestic', '$Foreign'])
+    df_hexbin = df_hexbin[(df_hexbin['$Domestic'] > 0) | (df_hexbin['$Foreign'] > 0)] # Exclude rows where both are zero
+    if not df_hexbin.empty:
+        plt.figure(figsize=(10, 8))
+        plt.hexbin(df_hexbin['$Domestic'], df_hexbin['$Foreign'], gridsize=50, cmap='inferno', mincnt=1)
+        plt.colorbar(label='Count')
+        plt.title('Hexbin Plot of Domestic vs. Foreign Revenue')
+        plt.xlabel('Domestic Revenue ($)')
+        plt.ylabel('Foreign Revenue ($)')
+        plt.tight_layout()
+        plt.show()
+    else:
+        print("Skipping Hexbin Plot: Not enough data after dropping NaN/zero values for Domestic and Foreign revenue.")
